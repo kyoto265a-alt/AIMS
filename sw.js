@@ -1,4 +1,4 @@
-const CACHE='aims-shell-v060';
+const CACHE='aims-shell-v061';
 self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const k of await caches.keys())if(k.startsWith('aims-shell-')&&k!==CACHE)await caches.delete(k);await self.clients.claim();})()));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin||!u.pathname.startsWith(new URL(self.registration.scope).pathname)||u.search)return;if(e.request.mode==='navigate'){e.respondWith((async()=>{try{const r=await fetch(e.request,{cache:'no-store'});if(r.ok){const c=await caches.open(CACHE);await c.put(new URL('index.html',self.registration.scope).href,r.clone());}return r;}catch(err){return (await caches.match(new URL('index.html',self.registration.scope).href))||Response.error();}})());}});
